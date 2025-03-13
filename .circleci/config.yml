@@ -1,0 +1,32 @@
+version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@5.2.0
+  terraform: circleci/terraform@3.6.0
+jobs:
+  aws-example:
+    environment:
+      AWS_REGION: us-east-1
+    docker:
+      - image: cimg/aws:2023.06
+    steps:
+      - aws-cli/setup:
+          role-arn: ${AWS_ROLE_ARN}
+          aws-region: ${AWS_REGION}
+      - terraform/plan:
+          path: ./terraform
+          checkout: true
+          context: terraform
+          persist-workspace: true
+          auto-approve: true
+      - terraform/apply:
+          attach-workspace: true
+          path: ./terraform
+          requires:
+            - terraform/plan
+          context: terraform
+          auto-approve: true
+workflows:
+  aws-example:
+    jobs:
+      - aws-example
+      
