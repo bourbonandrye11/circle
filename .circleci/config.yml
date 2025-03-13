@@ -10,8 +10,11 @@ jobs:
       - image: cimg/aws:2023.06
     steps:
       - aws-cli/setup:
-          role-arn: ${AWS_ROLE_ARN}
+          role_arn: ${AWS_ROLE_ARN}
           aws-region: ${AWS_REGION}
+      - terraform/init:
+          backend: true
+          path: ./terraform
       - terraform/plan:
           path: ./terraform
           checkout: true
