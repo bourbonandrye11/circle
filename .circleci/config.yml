@@ -6,30 +6,33 @@ jobs:
   aws-example:
     environment:
       AWS_REGION: us-east-1
-    docker:
-      - image: cimg/aws:2023.06
+#      TF_CLOUD_API_TOKEN: ${TFE_TOKEN}
+    executor: terraform/default
+#    docker:
+#      - image: cimg/aws:2023.06
     steps:
+      - checkout:
       - aws-cli/setup:
           role_arn: ${AWS_ROLE_ARN}
           aws_region: ${AWS_REGION}
+#      - terraform/install:
+      - terraform/fmt:
+          path: ./terraform
+      - terraform/validate:
+          path: ./terraform
       - terraform/init:
           backend: true
           path: ./terraform
+          terraform_cloud_token: ${TFE_TOKEN}
+#          environment:
+#            TF_CLOUD_API_TOKEN: ${TFE_TOKEN}
       - terraform/plan:
           path: ./terraform
-          checkout: true
-          context: terraform
-          persist-workspace: true
-          auto-approve: true
       - terraform/apply:
-          attach-workspace: true
           path: ./terraform
-          requires:
-            - terraform/plan
-          context: terraform
-          auto-approve: true
 workflows:
   aws-example:
     jobs:
-      - aws-example
+      - aws-example:
+          context: terraform
       

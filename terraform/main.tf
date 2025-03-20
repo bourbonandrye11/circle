@@ -46,6 +46,17 @@ resource "aws_subnet" "tf_public_subnet" {
     }
 }
 
+resource "aws_subnet" "tf_private_subnet" {
+    vpc_id = aws_vpc.tf_vpc.id
+    count = length(var.private_subnet_cidrs)
+    cidr_block = element(var.private_subnet_cidrs, count.index)
+    availability_zone = element(var.aws_azs, count.index)
+
+    tags = {
+        Name = "tf_private_subnet"
+    }
+}
+
 resource "aws_internet_gateway" "tf_igw" {
     vpc_id = aws_vpc.tf_vpc.id
 
@@ -55,6 +66,19 @@ resource "aws_internet_gateway" "tf_igw" {
 }
 
 resource "aws_route_table" "tf_public_route_table" {
+    vpc_id = aws_vpc.tf_vpc.id
+
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.tf_igw.id
+    }
+
+    tags = {
+            Name = "tf_public_route_table"
+    }
+}
+
+resource "aws_route_table" "tf_private_route_table" {
     vpc_id = aws_vpc.tf_vpc.id
 
     route {
@@ -123,6 +147,7 @@ resource "aws_instance" "tf_instance" {
     subnet_id = data.aws_subnet.subnets_in_az.id
     instance_type = "t2.micro"
     availability_zone = "us-east-1a"
+    associate_public_ip_address = true
     vpc_security_group_ids = [aws_security_group.tf_security_group.id]
     metadata_options  {
         http_tokens = "required"
