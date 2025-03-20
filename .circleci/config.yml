@@ -18,6 +18,11 @@ jobs:
 #      - terraform/install:
 #      - terraform/fmt:
 #          path: ./terraform
+      - run:
+          command: >-
+            echo "credentials \"app.terraform.io\" {token =
+            \"$TF_CLOUD_API_TOKEN\"}" > $HOME/.terraformrc
+          name: Create .terraformrc file locally
       - terraform/validate:
           path: ./terraform
       - terraform/init:
