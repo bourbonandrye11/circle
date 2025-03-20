@@ -6,7 +6,7 @@ jobs:
   aws-example:
     environment:
       AWS_REGION: us-east-1
-#      TF_CLOUD_API_TOKEN: ${TFE_TOKEN}
+      TF_CLOUD_API_TOKEN: ${TFE_TOKEN}
     executor: terraform/default
 #    docker:
 #      - image: cimg/aws:2023.06
@@ -23,8 +23,6 @@ jobs:
       - terraform/init:
           backend: true
           path: ./terraform
-          environment:
-            TF_CLOUD_API_TOKEN: ${TFE_TOKEN}
       - terraform/plan:
           path: ./terraform
       - terraform/apply:
