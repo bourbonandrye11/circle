@@ -21,7 +21,7 @@ jobs:
       - run:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
-            \"$TFE_TOKEN\"}" > ./terraform/.terraformrc
+            \"$TFE_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
       - terraform/validate:
           path: ./terraform
