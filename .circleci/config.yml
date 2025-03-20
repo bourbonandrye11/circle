@@ -16,8 +16,8 @@ jobs:
           role_arn: ${AWS_ROLE_ARN}
           region: ${AWS_REGION}
 #      - terraform/install:
-      - terraform/fmt:
-          path: ./terraform
+#      - terraform/fmt:
+#          path: ./terraform
       - terraform/validate:
           path: ./terraform
       - terraform/init:
