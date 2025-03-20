@@ -23,9 +23,8 @@ jobs:
       - terraform/init:
           backend: true
           path: ./terraform
-          terraform_cloud_token: ${TFE_TOKEN}
-#          environment:
-#            TF_CLOUD_API_TOKEN: ${TFE_TOKEN}
+          environment:
+            TF_CLOUD_API_TOKEN: ${TFE_TOKEN}
       - terraform/plan:
           path: ./terraform
       - terraform/apply:
